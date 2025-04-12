@@ -1,0 +1,167 @@
+
+/* #mainPage > #root {
+  display: block;
+} */
+#root .loginForm,
+#root .registrationForm {
+  text-align: justify;
+}
+
+body#mainPage {
+    height: 100% !important;
+    width: 100% !important;
+    background: #232b2d;
+    overflow-y: hidden;
+    overflow-x: hidden;
+  }  
+
+  .registrationForm {
+    /* height: 350px !important; */
+    width: 600px !important;
+    margin: auto !important;  
+  }
+  
+  .loginForm {
+      /* height: 350px !important; */
+      width: 300px !important;
+      margin: auto !important;
+  }
+
+  .row.center-button{
+    display: flex; 
+    justify-content: center;
+  }
+  
+  #root {
+    height: 100vh;
+    flex-grow: 1;
+    box-sizing: borderbox;
+    display: flex;
+  }
+  
+  #mainPage .loginForm .segment,
+  #mainPage .registrationForm .segment {
+    background: #232b2d !important;
+    margin: 0px;
+    padding: 0px;
+  }
+  
+  button#login {
+    margin-top: 50px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    background-color: #009688;
+    color: #ffffff;
+    border-color: green;
+    border: none;
+    border-radius: 2px;
+    /*height: 40px;*/
+    width: 310px;
+    z-index: 5;
+  }  
+
+  button#registration {
+    margin-top: 50px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    background-color: #0069d9;
+    color: #ffffff;
+    border-color: #0069d9;
+    border: none;
+    border-radius: 2px;
+    /*height: 40px;*/
+    width: 310px;
+    z-index: 5;
+  }
+  
+  #mainPage .loginForm span,
+  #mainPage .registrationForm label {
+    color: rgba(255, 255, 255, 0.54);
+    font-family: Roboto;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+
+#mainPage .loginForm button span,
+#mainPage .registrationForm button span{
+  font-family: Roboto;
+  font-size: 16px;
+  letter-spacing: 0.6px;
+  font-weight: 400;
+  color: #ffffff;
+}
+  
+  
+  #mainPage button > span {
+    font-family: Roboto;
+      font-size: 16px;
+      letter-spacing: 0.6px;
+      font-weight: 400;
+      color: #ffffff;
+  }
+    
+  .loginForm div.line,
+  .registrationForm div.line{
+    height: 2px;
+      border: none;
+      border-width: 0px;
+      background-color: #ffffff;
+      margin: 0.3px 0px 0px 0px;
+      border-style: solid;
+  }
+
+  .registrationForm .row {
+    flex-wrap: nowrap;
+  }
+  
+  #mainPage .loginForm .form input,
+  #mainPage .loginForm input,
+  #mainPage .registrationForm .form input,
+  #mainPage .registrationForm input {
+    background: none;
+    height: 40px;
+    width: 300px;
+    border: none;
+    color: #ffffff !important;
+    padding: 0px !important; 
+  }
+  
+  #mainPage .loginForm div.field,
+  #mainPage .registrationForm div.field {
+    margin-top: 30px;
+    border: none;
+    width: 310px;
+    background: none;
+  }
+  
+  .millIcon {
+    height: 130px;
+    width: 244px;
+    margin-right: 29px;
+    margin-left: 29px;
+    align-items: middle;
+    text-align: center;
+  }
+  
+  .millIcon > img{
+    text-align: center;
+  }
+
+  .registrationFormCentered {
+    margin: auto !important;
+    background-color: aliceblue;
+    padding: 30px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+  }
+
+  .registrationFormCentered svg {
+    display: block;
+    margin: auto;
+
+  }
+
+  .registrationForm .row {
+    margin: 20px;
+  }
