@@ -19,7 +19,7 @@ function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  let [token, setToken] = useState(null);
+  // let [token, setToken] = useState(null);
   let [registration, setRegistration] = useState(false);
 
   const onLogin = async(username, password) => {
@@ -45,7 +45,7 @@ function App() {
         if(response.data.token){
           console.log(response.data.token);
 
-          setToken(response.data.token);
+          // setToken(response.data.token);
           // Dispatch login action
           dispatch(login(response.data.token));
 
@@ -67,14 +67,7 @@ function App() {
   };
 
   const onRegistration = async(username, password, email, firstname, lastname) => {
-    console.log(`
-      username: ${username}
-      password: ${password}
-      email: ${email}
-      firstname: ${firstname}
-      lastname: ${lastname}
-`);
-    console.log(password);
+
 
     try {
         const response = await axios.post(
@@ -93,58 +86,20 @@ function App() {
                 },
             },
         );
-
-        console.log(response.data)
         
         if(response.data.userId){
-          console.log(response.data.userId)
-          console.log(response.data.message)
           setRegistration(false)
         }
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            // console.error("Axios error:", error.response?.data); // Custom message from backend
             console.log("Status:", error.response?.status);
-            // alert(error.response?.data?.message || "Login failed");
             console.log(error);
             console.log(error.response?.data);
-            // console.log(error.response.message);
         } else {
             console.error("Unexpected error:", error);
         }
     }
   };
-
-  // const usernameLogged = () => {
-  //     if(token){
-  //       try {
-  //         const { userId, username, email } = jwtDecode(token); // This is the correct function call
-
-  //         return (<>
-  //           <div>
-  //             <span>{userId || ''}</span>
-  //             <span>{username || ''}</span>
-  //             <span>{email || ''}</span>
-  //           </div>
-  //         </>)
-  //       } catch (error) {
-  //         console.error("Token verification failed:", error);
-  //         return null; // or handle error more gracefully, e.g., show a message
-  //       }
-  //     } else {
-  //       return null
-  //     }
-  // };
-
-  // const showMovieList = () => {
-  //   if(token){
-  //     return (<>
-  //       <MoviesList token={token}/>
-  //     </>)
-  //   } else {
-  //     return null
-  //   }
-  // }
 
     return (
       <div className="mainContainer">
@@ -160,7 +115,7 @@ function App() {
               />
             } 
           />
-          <Route path="/main" element={<MainPage token={token}/>} />
+          <Route path="/main" element={<MainPage />} />
           <Route 
             path="/" 
             element={
@@ -175,22 +130,7 @@ function App() {
         </Routes>
       </div>
     );
-
-
-  // return (
-  //   <>
-  //     <div className="mainContainer">
-  //       {usernameLogged()}
-  //       <Login 
-  //         onClickLogin={onLogin} 
-  //         onClickRegister={onRegistration}
-  //         registration={registration}
-  //         setRegistration={setRegistration}
-  //       />
-  //       {showMovieList()}
-  //     </div>
-  //   </>
-  // )
+    
 }
 
 export default App

@@ -1,69 +1,114 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import axios from "axios";
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+
 
 const MoviesList = ({token}) => {
 
-    let [movies, setMovies] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true); // to stop fetching when done
+    const scrollContainerRef = useRef(null);
+  
+    // const [yearFilter, setYearFilter] = useState(''); // Store selected year filter
+    // const [revenueFilter, setRevenueFilter] = useState(''); // Store selected revenue filter
+    // const [filteredMovies, setFilteredMovies] = useState([]);
+  
+    useEffect(() => {
+      let ignore = false;
 
-    // const moviesListElem = movies.map((movie) => {
-
-    // })
-
-    useEffect(() => { 
-        const fetchMovies = async (token) => {
-            try {
-                //const Logintoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imhjb3J0ZTNAcHJvdG9uLm1lIiwidXNlcklkIjoxLCJpYXQiOjE3NDQyMzE2NDMsImV4cCI6MTc0NDIzNTI0M30.Fkn4FeU6soSW0Q8XT-RCZb2WxNIcSJqZRU4gitedDbU";
-                const response = await axios.get(
-                    `http://localhost:8080/movie/movies`,
-                    {
-                        params: {
-                            currentPage: 1,
-                            moviesPerPage: 2
-                        },
-                        withCredentials: false,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                    },
-                );
-              if (response.status !== 200) {
-                console.log(response)
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              console.log(response)
-              const data = await response.data.movies;
-              console.log(data);
-              setMovies(data);
-            } catch (err) {
-              setError(err.message || 'Something went wrong');
-            } finally {
-              setLoading(false);
+      const fetchMovies = async () => {
+        if (!token || loading || !hasMore) return;
+  
+        setLoading(true);
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/movie/movies`,
+            {
+              params: {
+                currentPage,
+                moviesPerPage: 30,
+              },
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
             }
-          };
+          );
+  
+          const newMovies = response.data.movies;
+  
+          if (!ignore) {
+            if (newMovies.length === 0) {
+              setHasMore(false);
+            } else {
+              setMovies((prev) => [...prev, ...newMovies]);
+            }
+          }
+        } catch (err) {
+          if (!ignore) setError(err.message || 'Something went wrong');
+        } finally {
+          if (!ignore) setLoading(false);
+        }
+      };
+  
+      fetchMovies();
 
-          fetchMovies(token);
-    }, [token]);
+      return () => {
+        ignore = true;
+      };
 
-    if (loading) return <div>Loading users...</div>;
-    if (error) return <div>Error: {error}</div>;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [token, currentPage, hasMore]);
+
+    useEffect(() => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+  
+      const handleScroll = () => {
+        if (
+          !loading &&
+          hasMore &&
+          container.scrollTop + container.clientHeight >= container.scrollHeight - 100
+        ) {
+          setCurrentPage((prev) => prev + 1);
+        }
+      };
+  
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }, [loading, hasMore]);
+
+
+    if (error) return <div className="text-danger text-center mt-5">Error: {error}</div>;
   
     return (
-      <div>
-        <h2>Movies List</h2>
-        <ul>
+      <Container 
+        className="mt-4 scrollY" 
+        ref={scrollContainerRef}
+        style={{ height: '80vh', overflowY: 'scroll' }}
+      >
+        <Row>
           {movies.map(movie => (
-            <li key={movie.id}>
-              {movie.title} ({movie.revenue})
-            </li>
+            <Col sm={12} md={4} lg={3} key={movie.id} className="mb-4">
+              <Card>
+                <Card.Img variant="top" src={movie.thumbnail} alt={movie.title} />
+                <Card.Body>
+                  <Card.Title>{movie.title}</Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted">{movie.year}</Card.Subtitle>
+                  <Card.Text>{movie.description}</Card.Text>
+                  <Button variant="primary">View Details</Button>
+                </Card.Body>
+              </Card>
+            </Col>
           ))}
-        </ul>
-      </div>
-    );
-
-    
+        </Row>
+        {loading && <div className="text-center my-4">Loading more movies...</div>}
+        {!hasMore && <div className="text-center my-4 text-muted">No more movies to load.</div>}
+      </Container>
+    );    
 }
 
 export default MoviesList;
