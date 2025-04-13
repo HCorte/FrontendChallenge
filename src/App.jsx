@@ -8,10 +8,10 @@ import axios from "axios";
 import { useState } from 'react';
 // import { jwtDecode } from "jwt-decode";
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate} from 'react-router-dom';
 import { Provider, useDispatch } from 'react-redux';
 import { login } from './redux/authSlice';
-import { useNavigate } from 'react-router-dom';
+import LoginRedirect from "./components/LoginRedirect";
 
 import './css/Page.css';
 
@@ -41,13 +41,11 @@ function App() {
             },
         );
 
-        console.log(response.data)
         if(response.data.token){
-          console.log(response.data.token);
-
-          // setToken(response.data.token);
-          // Dispatch login action
           dispatch(login(response.data.token));
+
+          // Save the token to localStorage to persist it across page reloads
+          localStorage.setItem('token', response.data.token);
 
           // Navigate to Main Page after login
           navigate('/main');
@@ -107,30 +105,25 @@ function App() {
           <Route 
             path="/login" 
             element={
-              <Login 
-                onClickLogin={onLogin} 
-                onClickRegister={onRegistration} 
-                registration={registration}
-                setRegistration={setRegistration}
-              />
+              <LoginRedirect>
+                <Login 
+                  onClickLogin={onLogin} 
+                  onClickRegister={onRegistration} 
+                  registration={registration}
+                  setRegistration={setRegistration}
+                />
+              </LoginRedirect>
             } 
           />
           <Route path="/main" element={<MainPage />} />
           <Route 
             path="/" 
-            element={
-              <Login 
-                onClickLogin={onLogin} 
-                onClickRegister={onRegistration} 
-                registration={registration}
-                setRegistration={setRegistration}
-              />
-            } 
+            element={<Navigate to="/login" replace />}
           /> {/* Default route */}
         </Routes>
       </div>
     );
-    
+
 }
 
 export default App
