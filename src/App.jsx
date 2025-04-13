@@ -22,6 +22,7 @@ function App() {
 
   // let [token, setToken] = useState(null);
   let [registration, setRegistration] = useState(false);
+  let [showpopup, setShowPopup] = useState(false);
 
   const onLogin = async(username, password) => {
     console.log(username);
@@ -65,8 +66,11 @@ function App() {
     }
   };
 
-  const onRegistration = async(username, password, email, firstname, lastname) => {
+  const closePopup = () => {
+    setShowPopup(false);
+  }
 
+  const onRegistration = async(username, password, email, firstname, lastname) => {
 
     try {
         const response = await axios.post(
@@ -88,6 +92,7 @@ function App() {
         
         if(response.data.userId){
           setRegistration(false)
+          setShowPopup(true)
         }
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -111,7 +116,9 @@ function App() {
                   onClickLogin={onLogin} 
                   onClickRegister={onRegistration} 
                   registration={registration}
+                  showpopup={showpopup}
                   setRegistration={setRegistration}
+                  closePopup={closePopup}
                 />
               </LoginRedirect>
             } 

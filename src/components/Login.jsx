@@ -1,18 +1,15 @@
 import { useState } from "react";
 // import axios from "axios";
 
-
 import Form from 'react-bootstrap/Form';
-import FormGroup from 'react-bootstrap/FormGroup';
 import Row from 'react-bootstrap/Row';
 import Col  from 'react-bootstrap/Col';
 import Button  from 'react-bootstrap/Button';
-import InputGroup  from 'react-bootstrap/InputGroup';
-import Alert  from 'react-bootstrap/Alert';
+import PopupRegistration from '../components/PopupRegistration';
 
 import '../css/Login.css'
 
-const Login = ({onClickLogin, onClickRegister, registration, setRegistration}) => {
+const Login = ({onClickLogin, onClickRegister, registration, showpopup, setRegistration, closePopup}) => {
     const [username, setUsername] = useState(""); 
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
@@ -29,6 +26,9 @@ const Login = ({onClickLogin, onClickRegister, registration, setRegistration}) =
         onClickRegister(username, password, email, firstname, lastname);
     }
 
+    // const closePopup = () => {
+    //     showPopup = false;
+    // }
 
     const loginFormElement = () => {
         return (<>
@@ -69,6 +69,7 @@ const Login = ({onClickLogin, onClickRegister, registration, setRegistration}) =
                     </button>
                 </div>
             </div>
+            {showpopup && <PopupRegistration showPopup={showpopup} closePopup={closePopup}/>}
         </>)
     }
 
