@@ -44,9 +44,11 @@ function PopupMovie({movieId, token, show, onClose}) {
             <Modal 
                 show={show}
                 onHide={onClose}
+                // backdrop="static" 
+                keyboard={true}  
                 size={size}
-                aria-labelledby="contained-modal-title-vcenter"
                 centered
+                aria-labelledby="contained-modal-title-vcenter"
                 id="PopupMovie"
             >
                 <Modal.Header closeButton>
