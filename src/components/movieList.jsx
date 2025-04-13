@@ -119,6 +119,14 @@ const MoviesList = ({token}) => {
       return () => container.removeEventListener("scroll", handleScroll);
     }, [loading, hasMore]);
 
+    useEffect(() => {
+      if (topRevenueLimit === '') {
+        setMovies([]);
+        setCurrentPage(1);
+        setHasMore(true);
+      }
+    }, [topRevenueLimit]);
+
     const showMovieDetails = (movieId) => {
       setSelectedMovieId(movieId);
       setShowPopup(true);
