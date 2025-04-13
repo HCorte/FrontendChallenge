@@ -12,19 +12,53 @@ const MoviesList = ({token}) => {
     const [hasMore, setHasMore] = useState(true); // to stop fetching when done
     const scrollContainerRef = useRef(null);
   
-    // const [yearFilter, setYearFilter] = useState(''); // Store selected year filter
-    // const [revenueFilter, setRevenueFilter] = useState(''); // Store selected revenue filter
-    // const [filteredMovies, setFilteredMovies] = useState([]);
-
+    const [yearFilter, setYearFilter] = useState(0); // Store selected year filter
+    const [topRevenueLimit, setTopRevenueLimit] = useState(''); // '' means infinite scroll mode
+    
     const [selectedMovieId, setSelectedMovieId] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
+    
+    // const handleRevenueChange = (event) => {
+    //   setSelectedRevenue(Number(event.target.value));
+    // };
 
+    useEffect(() => {
+      const fetchTopMoviesByRevenue = async () => {
+        if (!topRevenueLimit || !token) return;
+    
+        setLoading(true);
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/movie/moviesfiltered`,
+            {
+              params: { 
+                ntop: topRevenueLimit,
+                year: yearFilter 
+              },
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+            }
+          );
+          setMovies(response.data.movies || []);
+          setHasMore(false); // Disable infinite scroll
+        } catch (error) {
+          setError("Error fetching top revenue movies");
+          console.error(error)
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      fetchTopMoviesByRevenue();
+    }, [topRevenueLimit, yearFilter, token]);
   
     useEffect(() => {
       let ignore = false;
 
       const fetchMovies = async () => {
-        if (!token || loading || !hasMore) return;
+        if (!token || loading || !hasMore || topRevenueLimit) return;
   
         setLoading(true);
         try {
@@ -65,7 +99,7 @@ const MoviesList = ({token}) => {
       };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token, currentPage, hasMore]);
+    }, [token, currentPage, hasMore, topRevenueLimit]);
 
     useEffect(() => {
       const container = scrollContainerRef.current;
@@ -99,37 +133,68 @@ const MoviesList = ({token}) => {
     if (error) return <div className="text-danger text-center mt-5">Error: {error}</div>;
   
     return (
-      <Container 
-        className="mt-4 scrollY" 
-        ref={scrollContainerRef}
-        style={{ height: '80vh', overflowY: 'scroll' }}
-      >
-        <Row>
-          {movies.map(movie => (
-            <Col sm={12} md={4} lg={3} key={movie.id} className="mb-4">
-              <Card>
-                <Card.Img variant="top" src={movie.thumbnail} alt={movie.title} />
-                <Card.Body>
-                  <Card.Title>{movie.title}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">{movie.year}</Card.Subtitle>
-                  <Card.Text>{movie.description}</Card.Text>
-                  <Button variant="primary" onClick={() => showMovieDetails(movie.id)}>View Details</Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+      <>
+        <Row className="mb-3">
+          <Col sm={6}>
+            <label>Filter by Year:</label>
+            <select
+              className="form-select"
+              value={yearFilter}
+              onChange={(e) => setYearFilter(e.target.value)}
+            >
+              <option value="">All Years</option>
+              <option value="2000">2000</option>
+              <option value="1989">1989</option>
+              <option value="1988">1988</option>
+              {/* Add more dynamically if needed */}
+            </select>
+          </Col>
+          <Col sm={6}>
+            <label>Filter by Revenue:</label>
+            <select
+              className="form-select"
+              value={topRevenueLimit}
+              onChange={(e) => setTopRevenueLimit(e.target.value)}
+            >
+              <option value="">-- Show All (infinite scroll) --</option>
+              {[10, 20, 30, 40, 50].map((num) => (
+                <option key={num} value={num}>Top {num} movies</option>
+              ))}
+            </select>
+          </Col>
         </Row>
-        {loading && <div className="text-center my-4">Loading more movies...</div>}
-        {!hasMore && <div className="text-center my-4 text-muted">No more movies to load.</div>}
-        {showPopup && (
-          <PopupMovie
-            token={token}
-            movieId={selectedMovieId}
-            show={showPopup}
-            onClose={closePopup}
-          />
-        )}
-      </Container>
+        <Container 
+          className="mt-4 scrollY" 
+          ref={scrollContainerRef}
+          style={{ height: '80vh', overflowY: 'scroll' }}
+        >
+          <Row>
+            {movies.map(movie => (
+              <Col sm={12} md={4} lg={3} key={movie.id} className="mb-4">
+                <Card>
+                  <Card.Img variant="top" src={movie.thumbnail} alt={movie.title} />
+                  <Card.Body>
+                    <Card.Title>{movie.title}</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">{movie.year}</Card.Subtitle>
+                    <Card.Text>{movie.description}</Card.Text>
+                    <Button variant="primary" onClick={() => showMovieDetails(movie.id)}>View Details</Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+          {loading && <div className="text-center my-4">Loading more movies...</div>}
+          {!hasMore && <div className="text-center my-4 text-muted">No more movies to load.</div>}
+          {showPopup && (
+            <PopupMovie
+              token={token}
+              movieId={selectedMovieId}
+              show={showPopup}
+              onClose={closePopup}
+            />
+          )}
+        </Container>
+      </>
     );    
 }
 
