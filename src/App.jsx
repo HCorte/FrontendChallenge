@@ -9,7 +9,7 @@ import { useState } from 'react';
 // import { jwtDecode } from "jwt-decode";
 
 import { Route, Routes, Navigate, useNavigate} from 'react-router-dom';
-import { Provider, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from './redux/authSlice';
 import LoginRedirect from "./components/LoginRedirect";
 import { API_URL } from './config';
@@ -45,8 +45,8 @@ function App() {
         if(response.data.token){
           dispatch(login(response.data.token));
 
-          // Save the token to localStorage to persist it across page reloads
-          localStorage.setItem('token', response.data.token);
+          // // Save the token to localStorage to persist it across page reloads
+          // localStorage.setItem('token', response.data.token);
 
           // Navigate to Main Page after login
           navigate('/main');
@@ -121,6 +121,12 @@ function App() {
             path="/" 
             element={<Navigate to="/login" replace />}
           /> {/* Default route */}
+
+          {/* Catch-all route for invalid paths */}
+          <Route 
+            path="*" 
+            element={<Navigate to="/login" replace />} 
+          />
         </Routes>
       </div>
     );

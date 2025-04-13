@@ -16,6 +16,7 @@ const MainPage = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const token = useSelector((state) => state.auth.token);
+  const username = useSelector((state) => state.auth.username);
 
   // States to manage the movies data, filters, and loading state
 
@@ -33,11 +34,12 @@ const MainPage = () => {
   return (
     <div>
       <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="/">MovieApp</Navbar.Brand>
+        <Navbar.Brand href="/">MovieApp - username: {username}</Navbar.Brand>
         <Nav className="ml-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#about">About</Nav.Link>
-          <Nav.Link href="#contact">Contact</Nav.Link>
+          <Nav.Link href="/main">Home</Nav.Link>
+          <Nav.Link href="/add-movie">Add Movie</Nav.Link>
+          {/* <Nav.Link href="#about">About</Nav.Link>
+          <Nav.Link href="#contact">Contact</Nav.Link> */}
           {isLoggedIn && <Nav.Link onClick={handleLogout}>Logout</Nav.Link>}
 
         </Nav>
