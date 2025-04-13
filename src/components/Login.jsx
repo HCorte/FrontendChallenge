@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import axios from "axios";
 
 import Form from 'react-bootstrap/Form';
@@ -15,6 +15,14 @@ const Login = ({onClickLogin, onClickRegister, registration, showpopup, setRegis
     const [email, setEmail] = useState("");
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
+
+    useEffect(() => {
+        setUsername("");
+        setPassword("");
+        setEmail("");
+        setFirstname("");
+        setLastname("");
+    }, [registration]);
 
     const handleLoginSubmit = (event) => {
         event.preventDefault();//prevents the normal js behaviour of a form
