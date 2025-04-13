@@ -3,6 +3,10 @@ import { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 
+import { useNavigate } from 'react-router-dom';
+import { Provider, useDispatch } from 'react-redux';
+import { logout } from '../redux/authSlice';
+
 import axios from "axios";
 // import ModalHeader from 'react-bootstrap/ModalHeader'
 // import ModalTitle from 'react-bootstrap/ModalTitle'
@@ -11,29 +15,40 @@ import axios from "axios";
 
 
 function PopupMovie({movieId, token, show, onClose}) {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [movie, setMovie] = useState(null);
-    // const [show, setShow] = useState(false);
     const [size, _setSize] = useState('md');
 
     useEffect(() => {
         if (!movieId || !token) return;
 
         const fetchMovie = async () => {
-            const response = await axios.get(
-                `http://localhost:8080/movie/movieById`,
-                {
-                    params: {
-                        movieId,
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
+            try {
+                const response = await axios.get(
+                    `http://localhost:8080/movie/movieById`,
+                    {
+                        params: {
+                            movieId,
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                setMovie(response.data.data.movie);
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    dispatch(logout());
+                    navigate('/login');
+                } else {
+                    setMovie(error.message || 'Something went wrong');
                 }
-            );
-            console.log(response.data.data.movie)
-            setMovie(response.data.data.movie);
+            }
+            
         };
     
     fetchMovie();

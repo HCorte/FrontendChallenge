@@ -1,9 +1,14 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
+import { Provider, useDispatch } from 'react-redux';
 import axios from "axios";
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PopupMovie from './PopupMovie';
+import { logout } from '../redux/authSlice';
 
 const MoviesList = ({token}) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -18,10 +23,6 @@ const MoviesList = ({token}) => {
     const [selectedMovieId, setSelectedMovieId] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     
-    // const handleRevenueChange = (event) => {
-    //   setSelectedRevenue(Number(event.target.value));
-    // };
-
     useEffect(() => {
       const fetchTopMoviesByRevenue = async () => {
         if (!topRevenueLimit || !token) return;
@@ -41,11 +42,19 @@ const MoviesList = ({token}) => {
               },
             }
           );
-          setMovies(response.data.movies || []);
+
+          const newMovies = response.data.movies;
+
+          setMovies(newMovies || []);
           setHasMore(false); // Disable infinite scroll
         } catch (error) {
-          setError("Error fetching top revenue movies");
-          console.error(error)
+          if (error.response && error.response.status === 401) {
+            dispatch(logout());
+            navigate('/login');
+          } else {
+            setError("Error fetching top revenue movies");
+            console.error(error)
+          }
         } finally {
           setLoading(false);
         }
@@ -86,7 +95,12 @@ const MoviesList = ({token}) => {
             }
           }
         } catch (err) {
-          if (!ignore) setError(err.message || 'Something went wrong');
+          if (error.response && error.response.status === 401) {
+            dispatch(logout());
+            navigate('/login');
+          } else {
+            if (!ignore) setError(err.message || 'Something went wrong');
+          }
         } finally {
           if (!ignore) setLoading(false);
         }

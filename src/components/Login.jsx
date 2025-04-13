@@ -72,19 +72,12 @@ const Login = ({onClickLogin, onClickRegister, registration, setRegistration}) =
         </>)
     }
 
-    // const handleRegistration = (event) => {
-    //     event.preventDefault();
-    //     console.log('registration');
-    //     setRegistration(false);
-    // }
-
     const registrationFormElement = () => {
         return (<> 
             <div className="ui container registrationForm">
                 <div className="ui segment">
                     <Form 
                     onSubmit={handleRegisterSubmit}
-                    // className={account.formClass}
                     >
                         <Row>
                             <Form.Group as={Col} md="4" className="field">
@@ -182,33 +175,6 @@ const Login = ({onClickLogin, onClickRegister, registration, setRegistration}) =
         </>
 
     );
-
-
-    // return (<>
-    //     <div>
-    //         <span>Username: </span>
-    //         <input
-    //             type="text"
-    //             id="username"
-    //             value={username}
-    //             onChange={(e) => setUsername(e.target.value)}
-    //             placeholder="Enter your username"
-    //         />
-
-    //         <span>Password: </span>
-    //         <input
-    //             type="password"
-    //             id="password"
-    //             value={password}
-    //             onChange={(e) => setPassword(e.target.value)}
-    //             placeholder="Enter your password"
-    //         />
-            
-    //     </div>
-    //     <div>
-    //         <button onClick={ () => onClickLogin(username, password)}>Login</button>
-    //     </div>
-    // </>);
 } 
 
 export default Login;
