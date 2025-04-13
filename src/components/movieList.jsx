@@ -5,6 +5,7 @@ import axios from "axios";
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PopupMovie from './PopupMovie';
 import { logout } from '../redux/authSlice';
+import { API_URL } from '../config';
 
 const MoviesList = ({token}) => {
     const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const MoviesList = ({token}) => {
         setLoading(true);
         try {
           const response = await axios.get(
-            `http://localhost:8080/movie/moviesfiltered`,
+            `${API_URL}/movie/moviesfiltered`,
             {
               params: { 
                 ntop: topRevenueLimit,
@@ -72,7 +73,7 @@ const MoviesList = ({token}) => {
         setLoading(true);
         try {
           const response = await axios.get(
-            `http://localhost:8080/movie/movies`,
+            `${API_URL}/movie/movies`,
             {
               params: {
                 currentPage,

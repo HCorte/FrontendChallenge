@@ -12,6 +12,7 @@ import { Route, Routes, Navigate, useNavigate} from 'react-router-dom';
 import { Provider, useDispatch } from 'react-redux';
 import { login } from './redux/authSlice';
 import LoginRedirect from "./components/LoginRedirect";
+import { API_URL } from './config';
 
 import './css/Page.css';
 
@@ -28,7 +29,7 @@ function App() {
 
     try {
         const response = await axios.post(
-            `http://localhost:8080/auth/login`,
+            `${API_URL}/auth/login`,
             {
                 username: username,
                 password,
@@ -69,7 +70,7 @@ function App() {
 
     try {
         const response = await axios.post(
-            `http://localhost:8080/auth/signup`,
+            `${API_URL}/auth/signup`,
             {
                 username,
                 password,

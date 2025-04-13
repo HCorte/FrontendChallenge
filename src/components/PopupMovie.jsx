@@ -5,9 +5,11 @@ import Button from 'react-bootstrap/Button'
 
 import { useNavigate } from 'react-router-dom';
 import { Provider, useDispatch } from 'react-redux';
-import { logout } from '../redux/authSlice';
-
 import axios from "axios";
+
+import { logout } from '../redux/authSlice';
+import { API_URL } from '../config';
+
 // import ModalHeader from 'react-bootstrap/ModalHeader'
 // import ModalTitle from 'react-bootstrap/ModalTitle'
 // import ModalBody from 'react-bootstrap/ModalBody'
@@ -27,7 +29,7 @@ function PopupMovie({movieId, token, show, onClose}) {
         const fetchMovie = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:8080/movie/movieById`,
+                    `${API_URL}/movie/movieById`,
                     {
                         params: {
                             movieId,
