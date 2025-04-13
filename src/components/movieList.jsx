@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-
+import PopupMovie from './PopupMovie';
 
 const MoviesList = ({token}) => {
 
@@ -15,6 +15,10 @@ const MoviesList = ({token}) => {
     // const [yearFilter, setYearFilter] = useState(''); // Store selected year filter
     // const [revenueFilter, setRevenueFilter] = useState(''); // Store selected revenue filter
     // const [filteredMovies, setFilteredMovies] = useState([]);
+
+    const [selectedMovieId, setSelectedMovieId] = useState(null);
+    const [showPopup, setShowPopup] = useState(false);
+
   
     useEffect(() => {
       let ignore = false;
@@ -81,6 +85,16 @@ const MoviesList = ({token}) => {
       return () => container.removeEventListener("scroll", handleScroll);
     }, [loading, hasMore]);
 
+    const showMovieDetails = (movieId) => {
+      setSelectedMovieId(movieId);
+      setShowPopup(true);
+    };
+    
+    const closePopup = () => {
+      setShowPopup(false);
+      setSelectedMovieId(null);
+    };
+    
 
     if (error) return <div className="text-danger text-center mt-5">Error: {error}</div>;
   
@@ -99,7 +113,7 @@ const MoviesList = ({token}) => {
                   <Card.Title>{movie.title}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">{movie.year}</Card.Subtitle>
                   <Card.Text>{movie.description}</Card.Text>
-                  <Button variant="primary">View Details</Button>
+                  <Button variant="primary" onClick={() => showMovieDetails(movie.id)}>View Details</Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -107,6 +121,14 @@ const MoviesList = ({token}) => {
         </Row>
         {loading && <div className="text-center my-4">Loading more movies...</div>}
         {!hasMore && <div className="text-center my-4 text-muted">No more movies to load.</div>}
+        {showPopup && (
+          <PopupMovie
+            token={token}
+            movieId={selectedMovieId}
+            show={showPopup}
+            onClose={closePopup}
+          />
+        )}
       </Container>
     );    
 }
