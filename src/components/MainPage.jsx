@@ -1,15 +1,12 @@
-import React, {useEffect} from 'react';
-// import { Navbar, Nav, Container } from 'react-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
+import {useEffect, useSelector, useDispatch, useNavigate} from '../hooks';
 import { logout } from '../redux/authSlice';
-import { useNavigate } from 'react-router-dom';
 
+import { Navbar, Nav } from 'react-bootstrap';
 import MoviesList from './movieList'
 
 import '../css/MainPage.css'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col, Navbar, Nav, Card, Button } from 'react-bootstrap';
 
 const MainPage = () => {
   const navigate = useNavigate();

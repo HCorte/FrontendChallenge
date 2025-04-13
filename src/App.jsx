@@ -1,6 +1,5 @@
 import './App.css'
 
-import MoviesList from './components/movieList';
 import Login from './components/Login';
 import MainPage from './components/MainPage'; 
 

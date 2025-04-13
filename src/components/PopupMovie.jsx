@@ -1,11 +1,8 @@
-import { useState, useEffect } from 'react';
+import {useEffect, useState, useDispatch, useNavigate} from '../hooks';
+import axios from "axios";
 
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
-
-import { useNavigate } from 'react-router-dom';
-import { Provider, useDispatch } from 'react-redux';
-import axios from "axios";
 
 import { logout } from '../redux/authSlice';
 import { API_URL } from '../config';

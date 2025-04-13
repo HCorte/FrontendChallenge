@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate } from 'react-router-dom';
-import { Provider, useDispatch } from 'react-redux';
 import axios from "axios";
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import PopupMovie from './PopupMovie';
 import { logout } from '../redux/authSlice';
 import { API_URL } from '../config';
+
+import {useEffect, useState, useRef, useDispatch, useNavigate} from '../hooks';
+
 
 const MoviesList = ({token}) => {
     const dispatch = useDispatch();
